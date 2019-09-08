@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  has_secure_password
+
   has_many :hangs
   has_many :hang_subscriptions
   has_many :hang_participants
