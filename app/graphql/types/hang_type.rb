@@ -1,0 +1,11 @@
+module Types
+  class HangType < Types::BaseObject
+    field :id, ID, null: false
+    field :start, GraphQL::Types::ISO8601DateTime, null: false
+    field :end, GraphQL::Types::ISO8601DateTime, null: false
+
+    field :owner, Types::UserType, null: false
+    field :hang_type, Types::HangTypeType, null: false
+    field :hang_participants, [Types::HangParticipantType], null: true
+  end
+end
