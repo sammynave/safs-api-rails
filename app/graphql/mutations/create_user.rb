@@ -1,8 +1,4 @@
 class Mutations::CreateUser < Mutations::BaseMutation
-  class AuthProviderSignupData < Types::BaseInputObject
-    argument :email, Types::AuthProviderEmailInput, required: false
-  end
-
   argument :username, String, required: true
   argument :phone, String, required: true
   argument :email, String, required: true
@@ -12,6 +8,7 @@ class Mutations::CreateUser < Mutations::BaseMutation
   field :errors, [String], null: true
 
   def resolve(username:, phone:, email:, password:)
+    # client should redirect to log in page after creation
     user = User.new(
       username: username,
       phone: phone,

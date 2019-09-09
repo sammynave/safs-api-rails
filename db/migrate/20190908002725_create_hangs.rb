@@ -7,8 +7,8 @@ class CreateHangs < ActiveRecord::Migration[6.0]
     end
 
     create_table :hangs do |t|
-      t.datetime :start, null: false
-      t.datetime :end, null: false
+      t.datetime :start_at, null: false
+      t.datetime :end_at, null: false
       t.belongs_to :owner, null: false, foreign_key: { to_table: :users }, index: true
       t.belongs_to :hang_type, null: false, foreign_key: true
 
