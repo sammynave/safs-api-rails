@@ -5,17 +5,18 @@ class Mutations::CreateUser < Mutations::BaseMutation
 
   argument :username, String, required: true
   argument :phone, String, required: true
-  argument :auth_provider, AuthProviderSignupData, required: false
+  argument :email, String, required: true
+  argument :password, String, required: true
 
   field :user, Types::UserType, null: true
   field :errors, [String], null: true
 
-  def resolve(username:, phone:, auth_provider:)
+  def resolve(username:, phone:, email:, password:)
     user = User.new(
       username: username,
       phone: phone,
-      email: auth_provider&.[](:email)&.[](:email),
-      password: auth_provider&.[](:email)&.[](:password)
+      email: email,
+      password: password
     )
     if user.save
       # Successful creation, return the created object with no errors
