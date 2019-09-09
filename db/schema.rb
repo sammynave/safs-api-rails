@@ -42,8 +42,8 @@ ActiveRecord::Schema.define(version: 2019_09_08_181041) do
   end
 
   create_table "hangs", force: :cascade do |t|
-    t.datetime "start", null: false
-    t.datetime "end", null: false
+    t.datetime "start_at", null: false
+    t.datetime "end_at", null: false
     t.bigint "owner_id", null: false
     t.bigint "hang_type_id", null: false
     t.datetime "created_at", precision: 6, null: false

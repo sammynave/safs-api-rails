@@ -6,6 +6,7 @@ module Types
     field :users, [Types::UserType], null: false
 
     def users
+      puts context[:current_user]
       User.all
     end
 
@@ -14,7 +15,15 @@ module Types
     end
 
     def user(id:)
+      puts context[:current_user]
       User.find(id)
+    end
+
+    field :hangs, [Types::HangType], null: false
+
+    def hangs
+      puts context[:current_user]
+      Hang.all.map
     end
   end
 end
