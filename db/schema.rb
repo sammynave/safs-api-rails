@@ -58,7 +58,7 @@ ActiveRecord::Schema.define(version: 2019_09_08_181041) do
     t.string "email", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "password_digest"
+    t.string "password_digest", null: false
   end
 
   add_foreign_key "hang_participants", "hangs"
