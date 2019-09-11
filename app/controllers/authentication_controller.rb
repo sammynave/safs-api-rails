@@ -1,5 +1,5 @@
 class AuthenticationController < ApplicationController
- skip_before_action [:authenticate_request]
+ skip_before_action :authenticate_request
 
  # logging out will require some thought
  # https://stackoverflow.com/questions/21978658/invalidating-json-web-tokens
