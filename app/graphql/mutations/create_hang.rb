@@ -6,6 +6,10 @@ class Mutations::CreateHang < Mutations::BaseMutation
   field :hang, Types::HangType, null: true
   field :errors, [String], null: true
 
+  def self.authorized?(object, context)
+    context[:current_user].is_a?(User)
+  end
+
   def resolve(hang_type_id:, start_at:, end_at:)
     hang_type = HangType.find(hang_type_id)
     user = context[:current_user]

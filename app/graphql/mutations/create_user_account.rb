@@ -1,4 +1,4 @@
-class Mutations::CreateUser < Mutations::BaseMutation
+class Mutations::CreateUserAccount < Mutations::BaseMutation
   argument :username, String, required: true
   argument :phone, String, required: true
   argument :email, String, required: true
@@ -6,6 +6,10 @@ class Mutations::CreateUser < Mutations::BaseMutation
 
   field :user, Types::UserType, null: true
   field :errors, [String], null: true
+
+  def self.authorized?(object, context)
+    context[:current_user].is_a?(GuestUser)
+  end
 
   def resolve(username:, phone:, email:, password:)
     # client should redirect to log in page after creation
