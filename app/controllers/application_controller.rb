@@ -1,11 +1,13 @@
-class ApplicationController < ActionController::API
-  before_action :get_current_user
+# frozen_string_literal: true
 
+class ApplicationController < ActionController::API
+  before_action :authenticate_request
   attr_reader :current_user
 
   private
 
-  def get_current_user
-    @current_user = AuthorizeApiRequest.call(request.headers).result
+  def authenticate_request
+    @current_user = AuthorizeApiRequest.call(request.cookies).result
+    render json: { error: 'Not Authorized' }, status: 401 unless @current_user
   end
 end

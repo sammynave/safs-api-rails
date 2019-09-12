@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Mutations::CreateHang < Mutations::BaseMutation
   argument :hang_type_id, String, required: true
   argument :start_at, GraphQL::Types::ISO8601DateTime, required: true
@@ -6,7 +8,7 @@ class Mutations::CreateHang < Mutations::BaseMutation
   field :hang, Types::HangType, null: true
   field :errors, [String], null: true
 
-  def self.authorized?(object, context)
+  def self.authorized?(_object, context)
     context[:current_user].is_a?(User)
   end
 
@@ -23,7 +25,7 @@ class Mutations::CreateHang < Mutations::BaseMutation
       # Successful creation, return the created object with no errors
       {
         hang: hang,
-        errors: [],
+        errors: []
       }
     else
       # Failed save, return the errors to the client

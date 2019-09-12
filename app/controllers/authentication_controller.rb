@@ -1,18 +1,22 @@
+# frozen_string_literal: true
+
 class AuthenticationController < ApplicationController
- skip_before_action :get_current_user
+  skip_before_action :authenticate_request
 
- # logging out will require some thought
- # https://stackoverflow.com/questions/21978658/invalidating-json-web-tokens
- #
- # set http only cookie with jwt maybe. instead of passing around jwt in json
+  def create
+    command = AuthenticateUser.call(create_params[:email], create_params[:password])
+    if command.success?
+      response.set_cookie('jwt_access',
+                          value: command.result,
+                          httponly: true,
+                          secure: Rails.env.production?)
+      render status: :created
+    else
+      render json: { errors: command.errors }, status: :unauthorized
+    end
+  end
 
- def authenticate
-   command = AuthenticateUser.call(params[:email], params[:password])
-
-   if command.success?
-     render json: { auth_token: command.result }
-   else
-     render json: { error: command.errors }, status: :unauthorized
-   end
- end
+  def create_params
+    params.require(:auth).permit(:email, :password)
+  end
 end
