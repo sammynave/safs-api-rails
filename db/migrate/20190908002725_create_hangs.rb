@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateHangs < ActiveRecord::Migration[6.0]
   def change
     create_table :hang_types do |t|
@@ -29,7 +31,7 @@ class CreateHangs < ActiveRecord::Migration[6.0]
       t.timestamps
     end
 
-    add_index :hang_subscriptions, [:user_id, :hang_type_id], unique: true
-    add_index :hang_participants, [:user_id, :hang_id], unique: true
+    add_index :hang_subscriptions, %i[user_id hang_type_id], unique: true
+    add_index :hang_participants, %i[user_id hang_id], unique: true
   end
 end
