@@ -8,7 +8,7 @@ module Types
     field :users, [Types::UserType], null: false
 
     def users
-      User.all
+      ::User.all
     end
 
     field :user, Types::UserType, null: false do
@@ -16,13 +16,19 @@ module Types
     end
 
     def user(id:)
-      User.find(id)
+      ::User.find(id)
     end
 
     field :hangs, [Types::HangType], null: false
 
     def hangs
-      Hang.all.map
+      ::Hang.all
+    end
+
+    field :hang_types, [Types::HangTypeType], null: false
+
+    def hang_types
+      ::HangType.all.includes(hang_subscriptions: [:user])
     end
 
     field :user_account, Types::UserAccountType, null: false do
@@ -30,7 +36,7 @@ module Types
     end
 
     def user_account(id:)
-      User.find(id)
+      ::User.find(id)
     end
   end
 end
