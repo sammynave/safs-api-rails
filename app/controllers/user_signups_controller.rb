@@ -5,13 +5,20 @@ class UserSignupsController < ApplicationController
 
   def create
     user = User.new(user_params)
-    if user.save
-      token = JsonWebToken.encode(user_id: user.id)
 
-      response.set_cookie('jwt_access',
-                          value: token,
-                          httponly: true,
-                          secure: Rails.env.production?)
+    if user.save
+      command = AuthenticateUser.call(user_params[:email], user_params[:password])
+
+      if command.success?
+        response.set_cookie('jwt_access',
+                            value: command.result,
+                            httponly: true,
+                            secure: Rails.env.production?)
+      else
+        return render json: { errors: [command.errors] },
+                      status: :unprocessable_entity
+      end
+
       render status: :created
     else
       render json: { errors: user.errors.full_messages },
