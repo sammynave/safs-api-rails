@@ -6,24 +6,9 @@ class UserSignupsController < ApplicationController
   def create
     user = User.new(user_params)
 
-    if user.save
-      command = AuthenticateUser.call(user_params[:email], user_params[:password])
+    return handle_auth(user_params[:email], user_params[:password]) if user.save
 
-      if command.success?
-        response.set_cookie('jwt_access',
-                            value: command.result,
-                            httponly: true,
-                            secure: Rails.env.production?)
-      else
-        return render json: { errors: [command.errors] },
-                      status: :unprocessable_entity
-      end
-
-      render status: :created
-    else
-      render json: { errors: user.errors.full_messages },
-             status: :unprocessable_entity
-    end
+    respond_with_error(user.errors.full_messages)
   end
 
   private
