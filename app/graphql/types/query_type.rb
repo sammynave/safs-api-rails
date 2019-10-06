@@ -19,6 +19,12 @@ module Types
       ::User.find(id)
     end
 
+    field :me, Types::UserType, null: false
+
+    def me
+      context[:current_user]
+    end
+
     field :hangs, [Types::HangType], null: false
 
     def hangs
@@ -38,5 +44,6 @@ module Types
     def user_account(id:)
       ::User.find(id)
     end
+
   end
 end
