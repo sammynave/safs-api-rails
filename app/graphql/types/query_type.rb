@@ -44,6 +44,5 @@ module Types
     def user_account(id:)
       ::User.find(id)
     end
-
   end
 end
