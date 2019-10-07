@@ -31,6 +31,12 @@ module Types
       ::Hang.all
     end
 
+    field :my_hangs, [Types::HangType], null: false
+
+    def my_hangs
+      context[:current_user].hangs
+    end
+
     field :hang_types, [Types::HangTypeType], null: false
 
     def hang_types
