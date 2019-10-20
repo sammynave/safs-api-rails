@@ -7,5 +7,6 @@ module Types
     field :subscribe_to_hang_type, mutation: Mutations::SubscribeToHangType
     field :unsubscribe_from_hang_type, mutation: Mutations::UnsubscribeFromHangType
     field :participate_in_hang, mutation: Mutations::ParticipateInHang
+    field :decline_to_participate_in_hang, mutation: Mutations::DeclineToParticipateInHang
   end
 end

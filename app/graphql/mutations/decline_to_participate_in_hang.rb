@@ -1,30 +1,25 @@
 # frozen_string_literal: true
 
-class Mutations::ParticipateInHang < Mutations::BaseMutation
+class Mutations::DeclineToParticipateInHang < Mutations::BaseMutation
   argument :hang_id, String, required: true
 
   field :hang_participant, Types::HangParticipantType, null: true
   field :upcoming_hangs, [Types::HangType], null: true
 
   def resolve(hang_id:)
-    user = context[:current_user]
-    hang = Hang.find(hang_id)
-    hang_participant = HangParticipant.new(
-      user: user,
-      hang: hang
-    )
-
-    if hang_participant.save
+    hang_participant = context[:current_user]
+                       .hang_participants
+                       .where(hang_id: hang_id)
+                       .first
+    if hang_participant.destroy!
       {
-        hang_participant: hang_participant,
         upcoming_hangs: upcoming_hangs,
         errors: []
       }
     else
       {
-        hang_participant: nil,
-        upcoming_hangs: upcoming_hangs,
-        errors: hang.errors.full_messages
+        upcoming_hangs: nil,
+        errors: hang_participant.errors.full_messages
       }
     end
   end
