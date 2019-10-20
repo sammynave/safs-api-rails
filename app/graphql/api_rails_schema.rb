@@ -4,6 +4,8 @@ class ApiRailsSchema < GraphQL::Schema
   mutation(Types::MutationType)
   query(Types::QueryType)
 
+  use GraphQL::Batch
+
   def self.unauthorized_object(error)
     raise GraphQL::ExecutionError, "Not authorized to access this #{error.type.graphql_name}"
   end

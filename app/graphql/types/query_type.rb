@@ -31,17 +31,41 @@ module Types
       ::Hang.all
     end
 
+    field :upcoming_hangs, [Types::HangType], null: false
+
+    def upcoming_hangs
+      hang_type_ids = context[:current_user]
+                      .hang_subscriptions
+                      .pluck(:hang_type_id)
+
+      hangs = ::Hang
+              .where(hang_type_id: hang_type_ids)
+              .where('hangs.start_at > ?', DateTime.now.beginning_of_day)
+      hangs
+    end
+
     field :my_hangs, [Types::HangType], null: false do
       argument :start_after, GraphQL::Types::ISO8601DateTime, required: false
       argument :start_before, GraphQL::Types::ISO8601DateTime, required: false
     end
 
     def my_hangs(start_after: nil, start_before: nil)
-      return context[:current_user].hangs.where('hangs.start_at > ?', start_after) if start_after
-      return context[:current_user].hangs.where('hangs.start_at < ?', start_before) if start_before
+      if start_after
+        return context[:current_user]
+               .hangs
+               .where('hangs.start_at > ?', start_after)
+      end
+
+      if start_before
+        return context[:current_user]
+               .hangs
+               .where('hangs.start_at < ?', start_before)
+      end
 
       if start_before && start_after
-        return context[:current_user].hangs.where('hangs.start_at > ? and hangs.end_at < ?', start_after, start_before)
+        return context[:current_user]
+               .hangs
+               .where('hangs.start_at > ? and hangs.end_at < ?', start_after, start_before)
       end
 
       context[:current_user].hangs
@@ -50,7 +74,7 @@ module Types
     field :hang_types, [Types::HangTypeType], null: false
 
     def hang_types
-      ::HangType.all.includes(hang_subscriptions: [:user])
+      ::HangType.all
     end
 
     field :user_account, Types::UserAccountType, null: false do

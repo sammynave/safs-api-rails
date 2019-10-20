@@ -9,5 +9,13 @@ module Types
     field :owner, Types::UserType, null: false
     field :hang_type, Types::HangTypeType, null: false
     field :hang_participants, [Types::HangParticipantType], null: true
+
+    def hang_type
+      RecordLoader.for(::HangType).load(object.hang_type_id)
+    end
+
+    def hang_participants
+      RelatedRecordLoader.for(::HangParticipant, 'hang_id').load(object.id)
+    end
   end
 end
