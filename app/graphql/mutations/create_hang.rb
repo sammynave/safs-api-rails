@@ -6,17 +6,19 @@ class Mutations::CreateHang < Mutations::BaseMutation
   argument :end_at, GraphQL::Types::ISO8601DateTime, required: true
 
   field :hang, Types::HangType, null: true
-  field :my_hangs, [Types::HangType], null: false do
-    argument :start_after, GraphQL::Types::ISO8601DateTime, required: false
-    argument :start_before, GraphQL::Types::ISO8601DateTime, required: false
-  end
+  field :my_hangs, [Types::HangType], null: false
+
   field :errors, [String], null: true
 
   def self.authorized?(_object, context)
     context[:current_user].is_a?(User)
   end
 
-  def resolve(hang_type_id:, start_at:, end_at:, start_before: nil, start_after: Time.now.iso8601)
+  def resolve(
+    hang_type_id:,
+    start_at:,
+    end_at:
+  )
     hang_type = HangType.find(hang_type_id)
     user = context[:current_user]
     hang = Hang.new(
@@ -29,7 +31,7 @@ class Mutations::CreateHang < Mutations::BaseMutation
       # Successful creation, return the created object with no errors
       {
         hang: hang,
-        my_hangs: user.hangs.where('hangs.start_at > ?', start_after),
+        my_hangs: context[:current_user].hangs,
         errors: []
       }
     else
